@@ -3,14 +3,14 @@ MAINTAINER hi@liammartens.com (hi@liammartens.com)
 
 # add user www-data
 RUN adduser -D www-data
-RUN mkdir /home/www-data/caddy && mkdir /home/www-data/caddy/log && mkdir /home/www-data/caddy/conf
+RUN mkdir /home/www-data/caddy /home/www-data/caddy/log /home/www-data/caddy/conf /var/www
 WORKDIR /home/www-data/caddy
 
 # update repos and upgrade
 RUN apk update && apk upgrade
 
 # add some packages
-RUN apk add tar curl
+RUN apk add tar curl tzdata
 
 # set build agrument plugins
 ARG plugins=cors,expires,git,ipfilter,jsonp,locale,minify,realip
@@ -30,5 +30,8 @@ COPY scripts/run.sh /home/www-data/run.sh
 RUN chmod +x /home/www-data/run.sh
 COPY scripts/continue.sh /home/www-data/continue.sh
 RUN chmod +x /home/www-data/continue.sh
+
+# chown
+RUN touch /etc/localtime /etc/timezone && chown -R www-data:www-data /home/www-data /etc/localtime /etc/timezone /var/www
 
 ENTRYPOINT ["/home/www-data/run.sh", "su", "-m", "www-data", "-c", "/home/www-data/continue.sh /bin/sh"]
