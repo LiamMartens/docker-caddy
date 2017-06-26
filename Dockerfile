@@ -10,13 +10,10 @@ WORKDIR /home/www-data/caddy
 RUN apk update && apk upgrade
 
 # add some packages
-RUN apk add tar curl tzdata
-
-# set build agrument plugins
-ARG plugins=cors,expires,git,ipfilter,jsonp,locale,minify,realip
+RUN apk add tar curl tzdata bash
 
 # download and extract caddy
-RUN curl --header "Accept: application/tar+gzip, application/x-gzip, application/octet-stream" -o - "https://caddyserver.com/download/build?os=linux&arch=amd64&features=${plugins}" > caddy.zip && tar -xzf caddy.zip caddy && rm caddy.zip
+RUN curl https://getcaddy.com | bash -s http.authz,http.cgi,http.cors,http.expires,http.filter,http.ipfilter,http.jwt,http.login,http.minify,http.proxyprotocol,http.ratelimit,http.realip,tls.dns.cloudflare
 
 # define volumes
 # hidden caddy dir (ssl certs, ...)

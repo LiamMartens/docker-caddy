@@ -1,2 +1,6 @@
 localhost:3000
+log ../log/caddy.log {common} {
+    rotate_size 20
+    rotate_keep 60
+}
 root /var/www
