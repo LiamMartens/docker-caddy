@@ -1,5 +1,6 @@
 FROM alpine:edge
 MAINTAINER hi@liammartens.com (hi@liammartens.com)
+ENV CADDY_VERSION=0.10.6
 
 # add user www-data
 RUN adduser -D www-data
@@ -13,7 +14,7 @@ RUN apk update && apk upgrade
 RUN apk add tar curl tzdata bash
 
 # download and extract caddy
-RUN curl https://getcaddy.com | bash -s http.authz,http.cgi,http.cors,http.expires,http.filter,http.ipfilter,http.jwt,http.login,http.minify,http.proxyprotocol,http.ratelimit,http.realip,tls.dns.cloudflare
+RUN curl https://getcaddy.com | bash -s http.cache,http.cgi,http.cors,http.expires,http.filter,http.ipfilter,http.jwt,http.login,http.mailout,http.minify,http.nobots,http.proxyprotocol,http.ratelimit,http.realip,http.restic,tls.dns.cloudflare
 
 # define volumes
 # hidden caddy dir (ssl certs, ...)
