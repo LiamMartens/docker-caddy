@@ -1,5 +1,8 @@
-FROM alpine:edge
+FROM alpine:3.6
 MAINTAINER hi@liammartens.com (hi@liammartens.com)
+
+# plugins
+ENV plugins=http.cache,http.cgi,http.cors,http.expires,http.ipfilter,http.minify,http.nobots,http.proxyprotocol,http.ratelimit
 
 # add user www-data
 RUN adduser -D www-data
@@ -13,9 +16,9 @@ RUN apk update && apk upgrade
 RUN apk add tar curl tzdata bash
 
 # download and extract caddy
-RUN curl https://getcaddy.com | bash -s http.authz,http.cgi,http.cors,http.expires,http.filter,http.ipfilter,http.jwt,http.login,http.minify,http.proxyprotocol,http.ratelimit,http.realip,tls.dns.cloudflare
+RUN curl https://getcaddy.com | bash -s ${plugins}
 
-# define volumes
+# volumes
 # hidden caddy dir (ssl certs, ...)
 # caddy log
 # caddy conf directory
