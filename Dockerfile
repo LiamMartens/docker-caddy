@@ -3,6 +3,7 @@ MAINTAINER hi@liammartens.com (hi@liammartens.com)
 
 # plugins
 ENV plugins=http.cache,http.cgi,http.cors,http.expires,http.ipfilter,http.minify,http.nobots,http.proxyprotocol,http.ratelimit
+ENV license=personal
 
 # add user www-data
 RUN adduser -D www-data
@@ -16,7 +17,7 @@ RUN apk update && apk upgrade
 RUN apk add tar curl tzdata bash
 
 # download and extract caddy
-RUN curl https://getcaddy.com | bash -s ${plugins}
+RUN curl https://getcaddy.com | bash -s ${license} ${plugins}
 
 # volumes
 # hidden caddy dir (ssl certs, ...)
