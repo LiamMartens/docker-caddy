@@ -19,8 +19,8 @@ RUN curl https://getcaddy.com | bash -s ${license} ${plugins}
 # caddy log
 # caddy conf directory
 # content directory
-VOLUME [ "/home/www-data/caddy/.caddy", "/home/www-data/caddy/log", "/home/www-data/caddy/conf", "/var/www" ]
+VOLUME /home/www-data/caddy/.caddy /home/www-data/caddy/log /home/www-data/caddy/conf /var/www
 
 # copy continue file
-COPY scripts/continue.sh /home/www-data/continue.sh
-RUN chmod +x /home/www-data/continue.sh
+COPY scripts/continue.sh ${ENV_DIR}/scripts/continue.sh
+RUN chmod +x ${ENV_DIR}/scripts/continue.sh
