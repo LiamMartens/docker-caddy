@@ -1,5 +1,6 @@
 FROM liammartens/alpine
 LABEL maintainer="Liam Martens <hi@liammartens.com>"
+ENV OWN_DIRS="${OWN_DIRS} /home/www-data/caddy/log /home/www-data/caddy/conf /var/www"
 
 # plugins
 ENV plugins=http.cache,http.cgi,http.cors,http.expires,http.ipfilter,http.minify,http.nobots,http.proxyprotocol,http.ratelimit
