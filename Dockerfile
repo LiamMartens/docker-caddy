@@ -10,10 +10,11 @@ RUN mkdir /home/www-data/caddy /home/www-data/caddy/log /home/www-data/caddy/con
 WORKDIR /home/www-data/caddy
 
 # add some packages
-RUN apk add tar
+RUN apk add tar libcap
 
 # download and extract caddy
 RUN curl https://getcaddy.com | bash -s ${license} ${plugins}
+RUN setcap 'cap_net_bind_service=+ep' $(which caddy)
 
 # volumes
 # hidden caddy dir (ssl certs, ...)

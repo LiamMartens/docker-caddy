@@ -13,6 +13,6 @@ fi
 
 # start caddy
 echo "Starting Caddy"
-caddy --conf $HOME/caddy/conf/Caddyfile --log $HOME/caddy/log/caddy.log
+caddy -conf $HOME/caddy/conf/Caddyfile -log $HOME/caddy/log/caddy.log
 
 $SHELL
