@@ -20,7 +20,7 @@ ENV PLUGINS=${PLUGINS}
 ENV LICENSE=${LICENSE}
 
 # @run mkdirs
-RUN mkdir /etc/caddy /var/log/caddy /var/www
+RUN mkdir -p /etc/caddy /var/log/caddy /var/www
 
 # @run chown the dirs
 RUN chown -R ${USER}:${USER} /etc/caddy /var/log/caddy /var/www
@@ -40,5 +40,5 @@ VOLUME [ "/home/www-data/.caddy", "/etc/caddy", "/var/log/caddy", "/var/www" ]
 # @user Set user back to non-root
 USER ${USER}
 
-# @cmd Set params
-ENTRYPOINT [ "caddy", "-conf", "/etc/caddy/Caddyfile", "-log", "/var/log/caddy/caddy.log", "-root", "/var/www" ]
+# @cmd Set caddy command
+CMD [ "-c", "caddy -conf /etc/caddy/Caddyfile -log /var/log/caddy/caddy.log -root /var/www" ]
