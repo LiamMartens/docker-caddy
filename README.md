@@ -2,18 +2,19 @@
 
 ## Plugins
 This image contains the following plugins by default but this can be changed by passing a build argument.
+* cache
+* cgi
 * cors
 * expires
-* git
 * ipfilter
-* jsonp
-* locale
 * minify
-* realip
+* nobots
+* proxyprotocol
+* ratelimit
 
 ## Volumes
 Defines 4 volumes
-* `/home/www-data/caddy/.caddy` : for the persistent caddy files (such as Let's Encrypt certificates)
-* `/home/www-data/caddy/log` : for the caddy.log file
-* `/home/www-data/caddy/conf` : for the Caddyfile configuration
-* `/var/www` : for the content
+* `/etc/caddy` For the Caddy configuration files (a default one is copied in this directory if you don't bind the volume)
+* `/var/log/caddy` For caddy log files
+* `/home/www-data/.caddy` For persistent caddy files (Let's Encrypt)
+* `/var/www` For web content
