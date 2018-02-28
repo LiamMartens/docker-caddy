@@ -34,9 +34,6 @@ COPY conf/Caddyfile /etc/caddy/
 # @run allow caddy to bind to ports without root
 RUN setcap 'cap_net_bind_service=+ep' $(which caddy)
 
-# @volume Set caddy volumes
-VOLUME [ "/home/www-data/.caddy", "/etc/caddy", "/var/log/caddy", "/var/www" ]
-
 # @user Set user back to non-root
 USER ${USER}
 
