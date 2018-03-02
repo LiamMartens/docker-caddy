@@ -20,16 +20,16 @@ ENV PLUGINS=${PLUGINS}
 ENV LICENSE=${LICENSE}
 
 # @run mkdirs
-RUN mkdir -p /etc/caddy /var/log/caddy /var/www
+RUN mkdir -p /etc/caddy /var/www
 
 # @copy Copy default caddyfile
 COPY conf/Caddyfile /etc/caddy/
 
 # @run chown the dirs
-RUN chown -R ${USER}:${USER} /etc/caddy /var/log/caddy /var/www
+RUN chown -R ${USER}:${USER} /etc/caddy /var/www
 
 # @run chmod the dirs
-RUN chmod -R 750 /etc/caddy /var/log/caddy /var/www
+RUN chmod -R 750 /etc/caddy /var/www
 
 # @run download and extract caddy
 RUN curl https://getcaddy.com | bash -s ${LICENSE} ${PLUGINS}
@@ -40,8 +40,8 @@ RUN setcap 'cap_net_bind_service=+ep' $(which caddy)
 # @user Set user back to non-root
 USER ${USER}
 
-# @volume Logs volume
-VOLUME [ "/var/log/caddy" ]
+# @healthcheck Define healthcheck
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=2 CMD [[ $(pgrep -x "caddy") ]] || exit 1
 
 # @cmd Set caddy command
-CMD [ "-c", "caddy -conf /etc/caddy/Caddyfile -log /var/log/caddy/caddy.log -root /var/www" ]
+CMD [ "-c", "caddy -conf /etc/caddy/Caddyfile -log stdout -root /var/www" ]

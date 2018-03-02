@@ -1,6 +1,6 @@
 localhost {
     root /var/www
-    log / /var/log/caddy/caddy.log "{common}" {
+    log / stdout "{common}" {
         rotate_size 20
         rotate_keep 60
     }
