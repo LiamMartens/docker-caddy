@@ -22,14 +22,14 @@ ENV LICENSE=${LICENSE}
 # @run mkdirs
 RUN mkdir -p /etc/caddy /var/log/caddy /var/www
 
+# @copy Copy default caddyfile
+COPY conf/Caddyfile /etc/caddy/
+
 # @run chown the dirs
 RUN chown -R ${USER}:${USER} /etc/caddy /var/log/caddy /var/www
 
 # @run download and extract caddy
 RUN curl https://getcaddy.com | bash -s ${LICENSE} ${PLUGINS}
-
-# @copy Copy default caddyfile
-COPY conf/Caddyfile /etc/caddy/
 
 # @run allow caddy to bind to ports without root
 RUN setcap 'cap_net_bind_service=+ep' $(which caddy)
