@@ -28,6 +28,9 @@ COPY conf/Caddyfile /etc/caddy/
 # @run chown the dirs
 RUN chown -R ${USER}:${USER} /etc/caddy /var/log/caddy /var/www
 
+# @run chmod the dirs
+RUN chmod -R 750 /etc/caddy /var/log/caddy /var/www
+
 # @run download and extract caddy
 RUN curl https://getcaddy.com | bash -s ${LICENSE} ${PLUGINS}
 
@@ -36,6 +39,9 @@ RUN setcap 'cap_net_bind_service=+ep' $(which caddy)
 
 # @user Set user back to non-root
 USER ${USER}
+
+# @volume Logs volume
+VOLUME [ "/var/log/caddy" ]
 
 # @cmd Set caddy command
 CMD [ "-c", "caddy -conf /etc/caddy/Caddyfile -log /var/log/caddy/caddy.log -root /var/www" ]
