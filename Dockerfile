@@ -1,13 +1,24 @@
+# @from Builder
+FROM abiosoft/caddy:builder AS builder
+
+# @arg Build options
+ARG VERSION="0.10.11"
+ARG PLUGINS="cache,cgi,cors,expires,ipfilter,minify,nobots,proxyprotocol,ratelimit"
+
+# @run Build it
+RUN VERSION=${VERSION} PLUGINS=${PLUGINS} /bin/sh /usr/bin/builder.sh
+
 # @arg Override the alpine non-root user
 ARG USER=www-data
+# @from Actual image
 FROM liammartens/alpine
 LABEL maintainer="Liam Martens <hi@liammartens.com>"
 
-# @arg Define the Caddy plugins
-ARG PLUGINS=http.cache,http.cgi,http.cors,http.expires,http.ipfilter,http.minify,http.nobots,http.proxyprotocol,http.ratelimit
+# @arg ping port
+ARG PING_PORT
 
-# @arg Define the Caddy license
-ARG LICENSE=personal
+# @env ping port
+ENV PING_PORT=${PING_PORT:-65535}
 
 # @user Set user to root for installation
 USER root
@@ -15,15 +26,11 @@ USER root
 # @run add necessary packages
 RUN apk add tar libcap
 
-# @env set plugins and license
-ENV PLUGINS=${PLUGINS}
-ENV LICENSE=${LICENSE}
-
 # @run mkdirs
 RUN mkdir -p /etc/caddy /var/www
 
 # @copy Copy default caddyfile
-COPY conf/Caddyfile /etc/caddy/
+COPY conf/ /etc/caddy/
 
 # @run chown the dirs
 RUN chown -R ${USER}:${USER} /etc/caddy /var/www
@@ -31,8 +38,8 @@ RUN chown -R ${USER}:${USER} /etc/caddy /var/www
 # @run chmod the dirs
 RUN chmod -R 750 /etc/caddy /var/www
 
-# @run download and extract caddy
-RUN curl https://getcaddy.com | bash -s ${LICENSE} ${PLUGINS}
+# @copy Add caddy binary
+COPY --from=builder /install/caddy /usr/bin/caddy
 
 # @run allow caddy to bind to ports without root
 RUN setcap 'cap_net_bind_service=+ep' $(which caddy)
@@ -41,7 +48,7 @@ RUN setcap 'cap_net_bind_service=+ep' $(which caddy)
 USER ${USER}
 
 # @healthcheck Define healthcheck
-HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=2 CMD [[ $(pgrep -x "caddy") ]] || exit 1
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=2 CMD curl localhost:${PING_PORT} || exit 1
 
 # @cmd Set caddy command
 CMD [ "-c", "caddy -conf /etc/caddy/Caddyfile -log stdout -root /var/www" ]
