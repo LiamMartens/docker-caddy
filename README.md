@@ -23,3 +23,9 @@ This image contains the following plugins by default but this can be changed by 
 
 ## Logging
 All logs are written to `stdout`
+
+## Health
+A simple default ping healthcheck was added in the default confiuration files. The healthcheck simply checks whether the ping port on localhost is available and returns an OK result.
+
+## License
+The `caddy` binary is built using the `abiosoft/caddy:builder` image. This way the official `caddy` binary licensing does not apply.
