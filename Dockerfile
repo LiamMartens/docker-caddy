@@ -1,3 +1,6 @@
+# @arg Override the alpine non-root user
+ARG USER=www-data
+
 # @from Builder
 FROM abiosoft/caddy:builder AS builder
 
@@ -8,8 +11,6 @@ ARG PLUGINS="cache,cgi,cors,expires,ipfilter,minify,nobots,proxyprotocol,ratelim
 # @run Build it
 RUN VERSION=${VERSION} PLUGINS=${PLUGINS} /bin/sh /usr/bin/builder.sh
 
-# @arg Override the alpine non-root user
-ARG USER=www-data
 # @from Actual image
 FROM liammartens/alpine
 LABEL maintainer="Liam Martens <hi@liammartens.com>"
@@ -18,7 +19,7 @@ LABEL maintainer="Liam Martens <hi@liammartens.com>"
 ARG PING_PORT
 
 # @env default caddy path
-ENV CADDYPATH=/etc/caddy/.caddy
+ENV CADDYPATH=/etc/certificates
 
 # @env ping port
 ENV PING_PORT=${PING_PORT:-65535}
@@ -30,16 +31,19 @@ USER root
 RUN apk add tar libcap
 
 # @run mkdirs
-RUN mkdir -p /etc/caddy /var/www
+RUN mkdir -p /etc/caddy /etc/certificates /var/www
 
 # @copy Copy default caddyfile
 COPY conf/ /etc/caddy/
 
 # @run chown the dirs
-RUN chown -R ${USER}:${USER} /etc/caddy /var/www
+RUN chown -R ${USER}:${USER} /etc/caddy /etc/certificates /var/www
 
 # @run chmod the dirs
 RUN chmod -R 750 /etc/caddy /var/www
+
+# @run chmod the certificates directory
+RUN chmod -R 700 /etc/certificates
 
 # @copy Add caddy binary
 COPY --from=builder /install/caddy /usr/bin/caddy
