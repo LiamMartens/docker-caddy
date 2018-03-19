@@ -17,6 +17,9 @@ LABEL maintainer="Liam Martens <hi@liammartens.com>"
 # @arg ping port
 ARG PING_PORT
 
+# @env default caddy path
+ENV CADDYPATH=/etc/caddy/.caddy
+
 # @env ping port
 ENV PING_PORT=${PING_PORT:-65535}
 

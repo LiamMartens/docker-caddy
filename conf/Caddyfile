@@ -1,4 +1,4 @@
-import ping/*
+import sys/*
 
 localhost {
     root /var/www
