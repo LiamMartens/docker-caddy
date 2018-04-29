@@ -31,16 +31,19 @@ USER root
 RUN apk add tar libcap
 
 # @run mkdirs
-RUN mkdir -p /etc/caddy /etc/certificates /var/www
+RUN mkdir -p /etc/certificates /var/www
 
 # @copy Copy default caddyfile
-COPY conf/ /etc/caddy/
+COPY .docker ${DOCKER_DIR}/
+
+# @run own it
+RUN own
 
 # @run chown the dirs
-RUN chown -R ${USER}:${USER} /etc/caddy /etc/certificates /var/www
+RUN chown -R ${USER}:${USER} /etc/certificates /var/www
 
 # @run chmod the dirs
-RUN chmod -R 750 /etc/caddy /var/www
+RUN chmod -R 750 /var/www
 
 # @run chmod the certificates directory
 RUN chmod -R 700 /etc/certificates
@@ -56,6 +59,3 @@ USER ${USER}
 
 # @healthcheck Define healthcheck
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=2 CMD curl localhost:${PING_PORT} || exit 1
-
-# @cmd Set caddy command
-CMD [ "-c", "caddy -conf /etc/caddy/Caddyfile -log stdout -root /var/www" ]
