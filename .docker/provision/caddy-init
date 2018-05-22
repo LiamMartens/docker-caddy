@@ -1,0 +1,6 @@
+#!/bin/bash
+
+if [ ! -z "$CADDY_CONF" ]; then
+    printf "import sys/*\nimport Caddyconf" > ${DOCKER_ETC_DIR}/caddy/Caddyfile
+    printf "$CADDY_CONF" > ${DOCKER_ETC_DIR}/caddy/Caddyconf
+fi
