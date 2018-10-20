@@ -53,6 +53,7 @@ COPY --from=builder /install/caddy /usr/bin/caddy
 
 # @run allow caddy to bind to ports without root
 RUN setcap 'cap_net_bind_service=+ep' $(which caddy)
+RUN setcap 'cap_net_bind_service=+ep' $(which supervisord)
 
 # @user Set user back to non-root
 USER ${USER}
